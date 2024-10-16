@@ -21,8 +21,3 @@ Attention:
 2. The notebooks is customised for networks of this study, so care should be taken
 when using it to produce similiar figures for PyPSA network files. 
 
-%## Usage
-
-%The notebooks use pre-solved networks (main scenario files avialble at zenodo:https://zenodo.org/records/11277299) to produce the figures from the paper.
-%PyPSA-Eur-Sec v0.6.0 is used to produce the networks.
- 
