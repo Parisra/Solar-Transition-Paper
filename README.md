@@ -15,7 +15,7 @@ but they seem feasible considering recent historical trends.
 ## Repository Structure
 
 - `notebooks` contains the Jupyter notebooks used for the evaluation of results.
-- `scripts` and 'config files' can be used to generate the network files using pypsa-eur\href{https://github.com/PyPSA/pypsa-eur}.
+- `scripts` and 'config files' can be used to generate the network files using pypsa-eur {https://github.com/PyPSA/pypsa-eur}.
 Attention:
 1. The scripts were used with pypsa-eur v0.9.0 and atlite v0.2.12. Adjustments to the code may be needed if later versions of pypsa-eur and atlite are used.
 2. The notebooks is customised for networks of this study, so care should be taken
