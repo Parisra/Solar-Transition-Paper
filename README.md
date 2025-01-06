@@ -15,7 +15,7 @@ but they seem feasible considering recent historical trends.
 ## Repository Structure
 
 - `notebooks` contains the Jupyter notebooks used for the evaluation of results.
-- `scripts` and 'config files' can be used to generate the network files using pypsa-eur (https://github.com/PyPSA/pypsa-eur).
+- `scripts` and 'config files' can be used to generate the network files using pypsa-eur (https://github.com/PyPSA/pypsa-eur). The specific version of pypsa-eur that was used to implement the changes is also saved at (https://github.com/Parisra/pypsa-eur/tree/merged). Single-axis horizontal tracking has now been implemented as a default technology in pypsa-eur but other PV configurations are specific to this study for now.
 Attention:
 1. The scripts were used with pypsa-eur v0.9.0 and atlite v0.2.12. Adjustments to the code may be needed if later versions of pypsa-eur and atlite are used.
 2. The notebooks is customised for networks of this study, so care should be taken
