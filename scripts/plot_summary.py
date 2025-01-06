@@ -504,6 +504,7 @@ def plot_carbon_budget_distribution(input_eurostat):
     ax1.set_xlim([1990, snakemake.params.planning_horizons[-1] + 1])
 
     ax1.plot(emissions, color="black", linewidth=3, label=None)
+    ax1.plot([2023, 2024],[3.2,3.2], color="black", linewidth=3, label=None, linestyle='dashed')
 
     # plot committed and under-discussion targets
     # (notice that historical emissions include all countries in the
