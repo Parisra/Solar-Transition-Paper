@@ -1103,20 +1103,21 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
 
         solar = n.generators.index[n.generators.carrier == "solar"]
         solar_rooftop = n.generators.index[n.generators.carrier == "solar rooftop"]
-        """
-        solar_w = n.generators.index[n.generators.carrier=="solar-W-inv-1.5"]
-        solar_e = n.generators.index[n.generators.carrier=="solar-E-inv-1.5"]
+        
+        ## These configurations can be commented out or removed at the end
+        solar_w = n.generators.index[n.generators.carrier=="solar-W"]
+        solar_e = n.generators.index[n.generators.carrier=="solar-E"]
         df_east_west= pd.DataFrame(data = ((n.generators_t.p_max_pu[solar_w]).values+(n.generators_t.p_max_pu[solar_e]).values)/2, 
                       index = (n.generators_t.p_max_pu[solar]).index,
                               columns=solar,)    
         
-        #solar_w_20 = n.generators.index[n.generators.carrier=="solar-W-20-inv-1.5"]
-        #solar_e_20 = n.generators.index[n.generators.carrier=="solar-E-20-inv-1.5"]
-        #df_east_west20= pd.DataFrame(data = ((n.generators_t.p_max_pu[solar_w_20]).values+(n.generators_t.p_max_pu[solar_e_20]).values)/2, 
-        #              index = (n.generators_t.p_max_pu[solar]).index, columns=solar,)  
+        solar_w_90 = n.generators.index[n.generators.carrier=="solar-W-90"]
+        solar_e_90 = n.generators.index[n.generators.carrier=="solar-E-90"]
+        df_east_west90= pd.DataFrame(data = ((n.generators_t.p_max_pu[solar_w_90]).values+(n.generators_t.p_max_pu[solar_e_90]).values)/2, 
+                      index = (n.generators_t.p_max_pu[solar]).index, columns=solar,)  
         
-        solar_w_10 = n.generators.index[n.generators.carrier=="solar-W-10-inv-1.5"]
-        solar_e_10 = n.generators.index[n.generators.carrier=="solar-E-10-inv-1.5"]
+        solar_w_10 = n.generators.index[n.generators.carrier=="solar-W-10"]
+        solar_e_10 = n.generators.index[n.generators.carrier=="solar-E-10"]
         df_east_west10= pd.DataFrame(data = ((n.generators_t.p_max_pu[solar_w_10]).values+(n.generators_t.p_max_pu[solar_e_10]).values)/2, 
                       index = (n.generators_t.p_max_pu[solar]).index,
                               columns=solar,)          
@@ -1132,13 +1133,13 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
             marginal_cost=n.generators.loc[solar, "marginal_cost"],
             capital_cost=n.generators.loc[solar, "capital_cost"]* pdelta,  ##0.66
             efficiency=n.generators.loc[solar, "efficiency"],
-            p_max_pu=df_east_west/1.5,
+            p_max_pu=df_east_west/1.5,   ##assumed inverter has dc_ac ratio of 1.5, reflected in technology costs
             lifetime=n.generators.loc[solar, "lifetime"],
         ) 
         n.madd(
             "Generator",
             solar,
-            suffix="-delta20",
+            suffix="-delta90",
             bus=n.generators.loc[solar, "bus"],
             carrier="solar-delta",
             p_nom_extendable=True,
@@ -1146,7 +1147,7 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
             marginal_cost=n.generators.loc[solar, "marginal_cost"],
             capital_cost=n.generators.loc[solar, "capital_cost"]* pdelta,  ##0.66
             efficiency=n.generators.loc[solar, "efficiency"],
-            p_max_pu=df_east_west20/1.5,  ##assuming both energy and costs are lower
+            p_max_pu=df_east_west90/1.5,  ##aassumed inverter has dc_ac ratio of 1.5, reflected in technology costs
             lifetime=n.generators.loc[solar, "lifetime"],
         ) 
         
@@ -1166,7 +1167,7 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
             lifetime=n.generators.loc[solar, "lifetime"],
         ) 
         
-        """
+        
 
         if snakemake.wildcards.clusters[-1:] == "m":
             simplified_pop_layout = pd.read_csv(
@@ -1180,19 +1181,19 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
         # i.e. 1 kW/person (population data is in thousands of people) so we get MW
         potential = 0.1 * 10 * pop_solar * rooftop_factor ## added for highrooftopcase
         
-        """ 
+         
         n.madd(
             "Generator",
             solar,
-            suffix=" rooftop delta20",
+            suffix=" rooftop delta90",
             bus=n.generators.loc[solar, "bus"] + " low voltage",
             carrier="solar rooftop",
             p_nom_extendable=True,
             p_nom_max=potential*1.2,     ## 20% higher land yeld
             marginal_cost=n.generators.loc[solar, "marginal_cost"],
-            capital_cost=costs.at["solar-rooftop", "fixed"]* pdelta, ##0.66
+            capital_cost=costs.at["solar-rooftop", "fixed"]* pdelta, 
             efficiency=n.generators.loc[solar, "efficiency"],
-            p_max_pu=df_east_west20,
+            p_max_pu=df_east_west90,
             lifetime=costs.at["solar-rooftop", "lifetime"],
         )
          
@@ -1205,7 +1206,7 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
             p_nom_extendable=True,
             p_nom_max=potential*1.27,     ## 20% higher land yeld
             marginal_cost=n.generators.loc[solar, "marginal_cost"],
-            capital_cost=costs.at["solar-rooftop", "fixed"]* pdelta, ##0.66
+            capital_cost=costs.at["solar-rooftop", "fixed"]* pdelta, 
             efficiency=n.generators.loc[solar, "efficiency"],
             p_max_pu=df_east_west10/1.5, 
             lifetime=costs.at["solar-rooftop", "lifetime"],
@@ -1215,8 +1216,8 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
         
         
         ## insert solar and solar HSAT with inverter:
-        custom_settings= {'solar' : ['solar-utility', [1.7, 1.9,]],  #1.3, 1.5,
-                      'solar-hsat' : ['solar-utility single-axis tracking', [1.5,1.9,]], ##1.3, 1.7
+        custom_settings= {'solar' : ['solar-utility', [1.3, 1.5, 1.7, 1.9,]],  
+                      'solar-hsat' : ['solar-utility single-axis tracking', [1.3,1.5, 1.7, 1.9,]], 
                       'solar-E' :['solar-utility', [1.3, 1.5, 1.7, 1.9,]],
                       'solar-W':['solar-utility', [1.3, 1.5, 1.7, 1.9,]],
                       'solar-SE':['solar-utility', [1.3, 1.5, 1.7, 1.9,]],
@@ -1250,9 +1251,8 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
                        
         
         ## insert solar rooftop with lower capacity inverter 
-        for inverter_ratio in [1.3,1.5,1.7,1.9] :   #1.3,1.5,1.7,1.9 #1.5, 1.7
-            #pmaxpu_inv = inverter_ratio * n.generators_t.p_max_pu[solar]
-            #pmaxpu_inv[pmaxpu_inv > (1)] = 1   ##DC/AC ratio
+        for inverter_ratio in [1.3,1.5,1.7,1.9] :  
+
             solar_inv = n.generators.index[n.generators.carrier=="solar-inv-"+str(inverter_ratio)]
             df_solar_inv= pd.DataFrame(data = (n.generators_t.p_max_pu[solar_inv]).values, 
                       index = (n.generators_t.p_max_pu[solar]).index,
@@ -1279,13 +1279,11 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
         for configuration in [ 
                               ["solar-SE","-SE","southeast"],
                               ["solar-SW","-SW","southwest"],
-                              #["solar-W","-W","west"],["solar-E","-E","east"]
+                              ["solar-W","-W","west"],["solar-E","-E","east"]
                               ]:
-
-           clusters = len(n.buses[n.buses.carrier=='AC'])                   
-           #max_pu = n.generators_t.p_max_pu[n.generators.index[n.generators.carrier == configuration[0]]]  ## [0:clusters] wihtout clusters, solar-E, solar-E-invs would be selected
-           #max_pu.columns = max_pu.columns.str.rstrip(configuration[1])  #p_max_pu does not work with solar
-           
+           solar_carrier = n.generators.index[n.generators.carrier == configuration[0]]
+           max_pu= pd.DataFrame(data = (n.generators_t.p_max_pu[solar_carrier]).values, 
+                      index = (n.generators_t.p_max_pu[solar]).index, columns=solar,)   
            n.madd(
             "Generator",
             solar,
@@ -1303,10 +1301,8 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
            
            
        
-           for inverter_ratio in [1.9]:          ##1.9 is probably too high for prosumers? but gets selected
+           for inverter_ratio in [1.3, 1.5, .17, 1.9]:  ## customize
 
-                #max_pu = inverter_ratio * max_pu
-                #max_pu[max_pu>(1)] = 1  ##DC/AC ratio
                 solar_inv = n.generators.index[n.generators.carrier==configuration[0]+"-inv-"+str(inverter_ratio)]
                 df_solar_inv= pd.DataFrame(data = (n.generators_t.p_max_pu[solar_inv]).values, 
                       index = (n.generators_t.p_max_pu[solar]).index, columns=solar,)   
@@ -1324,18 +1320,17 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
                  marginal_cost=n.generators.loc[solar, "marginal_cost"],
                  capital_cost=capital_cost_inv,
                  efficiency=n.generators.loc[solar, "efficiency"],
-                 p_max_pu=df_solar_inv, #max_pu,
+                 p_max_pu=df_solar_inv, 
                  lifetime=costs.at["solar-rooftop", "lifetime"],
                 ) 
         
         #"""
-        ## removing  east and west facing panels from utility solar
+        ## removing  unwanted configurations 
            
-        to_remove = [i+j for i in ['solar-E-20','solar-W-20','solar-E-90','solar-W-90','solar-E-10','solar-W-10', 'solar-E','solar-W','solar-SE','solar-SW']
-                      for j in ['','-inv-1.3','-inv-1.5','-inv-1.7','-inv-1.9']] #+ (
-                      #  ['solar-inv-1.3','solar-inv-1.9','solar-hsat-inv-1.7','solar-hsat-inv-1.9']  )
+        to_remove = [i+j for i in ['solar-E-90','solar-W-90','solar-E-10','solar-W-10', 'solar-E','solar-W','solar-SE','solar-SW']
+                      for j in ['','-inv-1.3','-inv-1.5','-inv-1.7','-inv-1.9']] + (
+                        ['solar-inv-1.3','solar-inv-1.9','solar-hsat-inv-1.7','solar-hsat-inv-1.9']  )
         for tech in to_remove :
-              #if tech[tech.find('-')+1:] in ['W','E']:   
                         print('removing '+tech)
                         generators_rm = n.generators.index[n.generators.carrier==tech]
                         n.mremove("Generator", generators_rm)                  
@@ -1344,13 +1339,10 @@ def add_new_solar_technologies(n, costs, rooftop_factor=1, pdelta=0.78,add_new_s
     if not add_new_solar:
         carriers = n.generators.carrier.unique()
 
-        for tech in carriers : #['solar-E','solar-W','solar-SE','solar-SW','solar-E-20','solar-W-20','solar-E-10','solar-W-10','solar-hsat']:
+        for tech in carriers : 
             if 'solar' in tech and 'thermal' not in tech and not (tech == 'solar' or tech == 'solar rooftop'):  
                         print('removing '+tech)
-                        #n.generators.drop(
                         generators_rm = n.generators.index[n.generators.carrier==tech]
-                        #      , inplace=True
-                        #)  
                         n.mremove("Generator", generators_rm)                  
     
 def insert_gas_distribution_costs(n, costs):
