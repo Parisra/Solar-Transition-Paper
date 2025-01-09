@@ -1,4 +1,4 @@
-# Strategic deployment of solar photovoltaics for achieving self-sufficiency in Europe throughout the energy transition"
+# Strategic deployment of solar photovoltaics for achieving self-sufficiency in Europe throughout the energy transition
 
 This repository contains the scripts used to generate network files and the notebooks to reproduce figures in the main text and supplementary of the paper.
 
